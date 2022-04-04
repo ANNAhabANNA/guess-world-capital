@@ -1,5 +1,6 @@
 import gspread
 from google.oauth2.service_account import Credentials
+import random
 
 SCOPE = [
     "https://www.googleapis.com/auth/spreadsheets",
@@ -14,6 +15,9 @@ SHEET = GSPREAD_CLIENT.open('world_capital_cities')
 
 country_capital = SHEET.worksheet('country_capital')
 
-data = country_capital.get_all_values()
+user_name = input("Hi there! What's your name? ")
+while user_name == '':
+    print("Oops! That's an empty input")
+    user_name = input("Try again! Type your name here: ")
+print("Nice meeting you, " + user_name.capitalize())
 
-print(data)
