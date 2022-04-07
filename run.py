@@ -4,6 +4,7 @@ import random
 import sys
 import emoji
 from time import sleep
+import time
 
 SCOPE = [
     "https://www.googleapis.com/auth/spreadsheets",
@@ -31,7 +32,7 @@ def game_intro():
             ]
 
     for i in instructions:
-        print(i) ; sleep(3)
+        print(i) ; sleep(1)
 
 def ask_user():
     try:
@@ -53,11 +54,11 @@ def continent_choice():
     global google_list
     positive = 'yes'
     negative = 'no'
-    continents = ['Asia','Africa','Europe','North South America','Australia Oceania']
+    continents = ['asia','africa','europe','north south americas','australia oceania']
     play = True
     print("\nGo ahead and pick a continent:\n\n")
     print("\n".join(str(x) for x in continents))
-    chosen_continent = input('\n'"").capitalize()
+    chosen_continent = input('\n'"").lower()
     
     try:
 
@@ -96,12 +97,32 @@ def continent_choice():
 
 
 def get_random_pair():
+    global country, capital_hint
     random_choice = random.choice(google_list)
-    print(random_choice)
+    country = random_choice[0]
     capital = random_choice[1]
-    print(capital[0]+"."*(len(capital)-2)+capital[-1])
+    capital_hint = capital[0]+"."*(len(capital)-2)+capital[-1]
 
-game_intro()
-ask_user()
-continent_choice()
-get_random_pair()
+def loading_animation(count=15):
+    max_guesses = 3
+    for i in range(count + 1):
+        sys.stdout.write('\rI am thinkig up a country |')
+        time.sleep(0.1)
+        sys.stdout.write('\rI am thinkig up a country /')
+        time.sleep(0.1)
+        sys.stdout.write('\rI am thinkig up a country -')
+        time.sleep(0.1)
+        sys.stdout.write('\rI am thinkig up a country \\')
+        time.sleep(0.1)
+    sys.stdout.write("\rEUREKA! You have %s guesses to get it.\n" %(max_guesses))
+    
+
+def main():
+    game_intro()
+    ask_user()
+    continent_choice()
+    get_random_pair()
+    loading_animation() 
+
+
+main()
