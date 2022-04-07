@@ -1,6 +1,8 @@
 import gspread
 from google.oauth2.service_account import Credentials
 import random
+import sys
+import emoji
 
 SCOPE = [
     "https://www.googleapis.com/auth/spreadsheets",
@@ -13,60 +15,80 @@ SCOPED_CREDS = CREDS.with_scopes(SCOPE)
 GSPREAD_CLIENT = gspread.authorize(SCOPED_CREDS)
 SHEET = GSPREAD_CLIENT.open('world_capital_cities')
 
-country_capital = SHEET.worksheet('country_capital')
-
 user_name = input("\nHi there! What's your name? ")
 while user_name == '':
     print("\nOops! That's an empty input")
     user_name = input("Try again! Type your name here: ")
 print("\nNice meeting you, " + user_name.capitalize() + "\n")
 
-print("Let's play the game that checks how well you know the world's capital cities.\n")
+print("Let's play the game that checks how well you know the world's capital cities", emoji.emojize(":smiling_face_with_sunglasses:"),'\n')
 print("You will have to type in the capital city for the country I randomly choose.\n")
-ready = input("Are you ready to play?  ")
+print("To make it easier there will be a hint with the first and last letter of the capital.\n")
+print("If capital name consists of two or more words, you have to type it as one word.\n")
+
+def ask_user():
+    
+    try:
+        ready = input("Are you ready to play? (yes/no)  ")
+        if ready == 'yes':
+            return True
+        elif ready == 'no':
+            print("That's a shame! Come back next time", emoji.emojize(":grinning_face_with_big_eyes:"))
+            sys.exit()
+        elif ready != 'yes' & ready != 'no':
+            raise Exception
+        
+    except Exception as error:
+        print("Hmmm... Check if you typed 'yes' to play or 'no' to exit the game. Please try again.\n")
+        return ask_user()
+
 
 def continent_choice():
 
     global google_list
     positive = 'yes'
     negative = 'no'
-    continents = ['asia','africa','europe','north/south america','australia/oceania']
+    continents = ['Asia','Africa','Europe','North/South america','Australia/Oceania']
     play = True
 
-    print("\nFantastic! Go ahead and pick a continent:\n\n")
+    print("\nGo ahead and pick a continent:\n\n")
     print("\n".join(str(x) for x in continents))
-    chosen_continent = input('\n'"")
-    print("\n\nGreat choice!\n\n")
-    while play:
+    chosen_continent = input('\n'"").capitalize()
+    
+    try:
 
-        if ready == positive:
-           
-            if chosen_continent == continents[0]:
-                print("ASIA\n")
-                google_sheet_data = SHEET.worksheet('asian_countries').get_all_values()
-                google_list = google_sheet_data
-               
+        if chosen_continent == continents[0]:
+            google_sheet_data = SHEET.worksheet('asian_countries').get_all_values()
+            google_list = google_sheet_data
+            print("\n\n"f"{chosen_continent} is a great choice!\n")
+        
+        
+        elif chosen_continent == continents[1]:
+            google_sheet_data = SHEET.worksheet('african_countries').get_all_values()
+            google_list = google_sheet_data
+            print("\n\n"f"{chosen_continent} is a great choice!\n")
             
-            elif chosen_continent == continents[1]:
-                print("AFRICA\n")
-                google_sheet_data = SHEET.worksheet('african_countries').get_all_values()
-                google_list = google_sheet_data
-                
-            elif chosen_continent == continents[2]:
-                print("EUROPE\n")
-                google_sheet_data = SHEET.worksheet('european_countries').get_all_values()
-                google_list = google_sheet_data
+        elif chosen_continent == continents[2]:
+            google_sheet_data = SHEET.worksheet('european_countries').get_all_values()
+            google_list = google_sheet_data
+            print("\n\n"f"{chosen_continent} is a great choice!\n")
 
-            elif chosen_continent == continents[3]:
-                print("NORTH/SOUTH AMERICA\n")
-                google_sheet_data = SHEET.worksheet('north_south_america_countries').get_all_values()
-                google_list = google_sheet_data
+        elif chosen_continent == continents[3]:
+            google_sheet_data = SHEET.worksheet('north_south_america_countries').get_all_values()
+            google_list = google_sheet_data
+            print("\n\n"f"{chosen_continent} is a great choice!\n")
 
-            elif chosen_continent == continents[4]:
-                print("AUSTRALIA/OCEANIA\n")
-                google_sheet_data = SHEET.worksheet('australia_oceania_countries').get_all_values()
-                google_list = google_sheet_data
-            break
+        elif chosen_continent == continents[4]:
+            google_sheet_data = SHEET.worksheet('australia_oceania_countries').get_all_values()
+            google_list = google_sheet_data
+            print("\n\n"f"{chosen_continent} is a great choice!\n")
+        
+        else:
+            raise Exception (f"only the continents from the list provided are considered")
+    
+    except Exception as error:
+        print(f"\nThis is invalid input as {error}, please try again.\n")
+        return continent_choice()
 
 
 def get_random_pair():
@@ -76,6 +98,6 @@ def get_random_pair():
     capital = random_choice[1]
     print(capital[0]+"."*(len(capital)-2)+capital[-1])
 
-
+ask_user()
 continent_choice()
 get_random_pair()
