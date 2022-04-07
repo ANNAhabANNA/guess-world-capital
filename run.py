@@ -3,6 +3,7 @@ from google.oauth2.service_account import Credentials
 import random
 import sys
 import emoji
+from time import sleep
 
 SCOPE = [
     "https://www.googleapis.com/auth/spreadsheets",
@@ -15,19 +16,24 @@ SCOPED_CREDS = CREDS.with_scopes(SCOPE)
 GSPREAD_CLIENT = gspread.authorize(SCOPED_CREDS)
 SHEET = GSPREAD_CLIENT.open('world_capital_cities')
 
-user_name = input("\nHi there! What's your name? ")
-while user_name == '':
-    print("\nOops! That's an empty input")
-    user_name = input("Try again! Type your name here: ")
-print("\nNice meeting you, " + user_name.capitalize() + "\n")
+def game_intro():
+    user_name = input("\nHi there! What's your name? ")
+    while user_name == '':
+        print("\nOops! That's an empty input")
+        user_name = input("Try again! Type your name here: ")
+    print("\nNice meeting you, " + user_name.capitalize() + emoji.emojize(":grinning_face_with_smiling_eyes:"), "\n")
+    print("My name is Anna, but you can call me Ann" + emoji.emojize(":handshake:") + "\n")
 
-print("Let's play the game that checks how well you know the world's capital cities", emoji.emojize(":smiling_face_with_sunglasses:"),'\n')
-print("You will have to type in the capital city for the country I randomly choose.\n")
-print("To make it easier there will be a hint with the first and last letter of the capital.\n")
-print("If capital name consists of two or more words, you have to type it as one word.\n")
+    instructions = ["Let's play the game that checks how well you know the world's capital cities" + emoji.emojize(":nerd_face:") + '\n', 
+            "You will have to type in the capital city for the country I randomly choose.\n", 
+            "To make it easier there will be a hint with the first and last letter of the capital.\n",
+            emoji.emojize(":index_pointing_up: ") + "If capital name consists of two or more words, you have to type it as one word.\n"
+            ]
+
+    for i in instructions:
+        print(i) ; sleep(3)
 
 def ask_user():
-    
     try:
         ready = input("Are you ready to play? (yes/no)  ")
         if ready == 'yes':
@@ -44,13 +50,11 @@ def ask_user():
 
 
 def continent_choice():
-
     global google_list
     positive = 'yes'
     negative = 'no'
-    continents = ['Asia','Africa','Europe','North/South america','Australia/Oceania']
+    continents = ['Asia','Africa','Europe','North South America','Australia Oceania']
     play = True
-
     print("\nGo ahead and pick a continent:\n\n")
     print("\n".join(str(x) for x in continents))
     chosen_continent = input('\n'"").capitalize()
@@ -92,12 +96,12 @@ def continent_choice():
 
 
 def get_random_pair():
-   
     random_choice = random.choice(google_list)
     print(random_choice)
     capital = random_choice[1]
     print(capital[0]+"."*(len(capital)-2)+capital[-1])
 
+game_intro()
 ask_user()
 continent_choice()
 get_random_pair()
