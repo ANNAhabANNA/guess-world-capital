@@ -18,10 +18,10 @@ GSPREAD_CLIENT = gspread.authorize(SCOPED_CREDS)
 SHEET = GSPREAD_CLIENT.open('world_capital_cities')
 
 def game_intro():
-    user_name = input("\nHi there! What's your name? ")
+    user_name = input("\nHi there! What's your name? \n")
     while user_name == '':
-        print("\nOops! That's an empty input")
-        user_name = input("Try again! Type your name here: ")
+        print("\nOops! That's an empty input \n")
+        user_name = input("Try again! Type your name here: \n")
     print("\nNice meeting you, " + user_name.capitalize() + emoji.emojize(":grinning_face_with_smiling_eyes:"), "\n")
     print("My name is Anna, but you can call me Ann" + emoji.emojize(":handshake:") + "\n")
 
@@ -36,11 +36,11 @@ def game_intro():
 
 def ask_user():
     try:
-        ready = input("Are you ready to play? (yes/no)  ")
+        ready = input("Are you ready to play? (yes/no)  \n")
         if ready == 'yes':
             return True
         elif ready == 'no':
-            print("That's a shame! Come back next time", emoji.emojize(":grinning_face_with_big_eyes:"))
+            print("That's a shame! Come back next time", emoji.emojize(":grinning_face_with_big_eyes:"), "\n")
             sys.exit()
         elif ready != 'yes' & ready != 'no':
             raise Exception
@@ -106,7 +106,7 @@ def get_random_pair():
 def loading_animation(count=15):
     max_guesses = 3
     for i in range(count + 1):
-        sys.stdout.write('\rI am thinkig up a country |')
+        sys.stdout.write('\rI am thinkig up a country | ')
         time.sleep(0.1)
         sys.stdout.write('\rI am thinkig up a country /')
         time.sleep(0.1)
