@@ -33,10 +33,10 @@ def game_intro():
 
     for i in instructions:
         print(i) ; sleep(1)
-
-def ask_user():
+again = None
+def ask_user(again):
     try:
-        ready = input("Are you ready to play? (yes/no)  \n")
+        ready = input(f"Are you ready to play {again}? (yes/no)  \n")
         if ready == 'yes':
             return True
         elif ready == 'no':
@@ -47,7 +47,7 @@ def ask_user():
         
     except Exception as error:
         print("Hmmm... Check if you typed 'yes' to play or 'no' to exit the game. Please try again.\n")
-        return ask_user()
+        return ask_user(again)
 
 
 def continent_choice():
@@ -94,18 +94,9 @@ def continent_choice():
     except Exception as error:
         print(f"\nThis is invalid input as {error}, please try again.\n")
         return continent_choice()
-
-
-def get_random_pair():
-    global country, capital_hint
-    random_choice = random.choice(google_list)
-    country = random_choice[0]
-    capital = random_choice[1]
-    capital_hint = capital[0]+"."*(len(capital)-2)+capital[-1]
-
+    
 def loading_animation(count=15):
-    max_guesses = 3
-    for i in range(count + 1):
+    for i in range(count):
         sys.stdout.write('\rI am thinkig up a country | ')
         time.sleep(0.1)
         sys.stdout.write('\rI am thinkig up a country /')
@@ -114,15 +105,37 @@ def loading_animation(count=15):
         time.sleep(0.1)
         sys.stdout.write('\rI am thinkig up a country \\')
         time.sleep(0.1)
-    sys.stdout.write("\rEUREKA! You have %s guesses to get it.\n" %(max_guesses))
+    sys.stdout.write("\rEUREKA! I am ready for you right answer to my question..." + "\n\n")
+
+def play():
+    global google_list
+    max_guess = 3
+    guess_num = 1
+    user_attempt = ''
+    random_choice = random.choice(google_list)
+    country = random_choice[0]
+    capital = random_choice[1]
+    capital_hint = capital[0]+"."*(len(capital)-2)+capital[-1]
+
+    print("You have %s guesses to get it.\n\n" %(max_guess))
+    print("What is the capital of " + country.upper() + "?\n" + "Your hint is " + capital_hint.upper() + "\n")
     
+    while guess_num <= max_guess or user_attempt.lower() != capital.lower():
+        user_attempt = input("Guess #%s: " % (guess_num))
+        guess_num += 1
+        if user_attempt.lower() == capital.lower():
+            print("C'est magnefique! You are a force to be reckoned with in geography")
+            break
+        if guess_num > max_guess:
+            print("That was your last chance to get it right. The answer was %s." %(capital))
+            break
+    ask_user('again')
 
 def main():
     game_intro()
-    ask_user()
+    ask_user(again)
     continent_choice()
-    get_random_pair()
-    loading_animation() 
-
+    loading_animation()
+    play()
 
 main()
