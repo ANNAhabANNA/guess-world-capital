@@ -10,89 +10,103 @@ SCOPE = [
     "https://www.googleapis.com/auth/spreadsheets",
     "https://www.googleapis.com/auth/drive.file",
     "https://www.googleapis.com/auth/drive"
-    ]
+]
 
 CREDS = Credentials.from_service_account_file('creds.json')
 SCOPED_CREDS = CREDS.with_scopes(SCOPE)
 GSPREAD_CLIENT = gspread.authorize(SCOPED_CREDS)
 SHEET = GSPREAD_CLIENT.open('world_capital_cities')
 
+
 def game_intro():
+
     global user_name
     print("\nWELCOME TO CAPITALS OF THE WORLD QUIZZ")
-    user_name = input("\nHi there! What's your name? \n")
+    user_name = input("\nHI THERE! What's your name? \n")
     while user_name == '':
         print("\nOops! That's an empty input \n")
         user_name = input("Try again! Type your name here: \n")
-    print("\nNice meeting you, " + user_name.capitalize() + emoji.emojize(":grinning_face_with_smiling_eyes:"), "\n")
+    print("\nNice meeting you," + " " + user_name.capitalize())
+    print(emoji.emojize(":grinning_face_with_smiling_eyes:") + "\n")
 
-    instructions = ["Let's play the game that checks how well you know the world's capital cities" + emoji.emojize(":nerd_face:") + '\n', 
-            "You will have to type in the capital city for the country I randomly choose.\n", 
-            "To make it easier there will be a hint with the first and last letter of the capital.\n"
-            ]
+    instructions = [
+        "Let's check how well you know the world's capital cities.\n",
+        "You have to guess the world's capital I randomly choose.\n",
+        "You'll get a hint with the first and last letters of the city.\n",
+        "You have 3 guesses to get it right.\n\n"
+        "REMEMBER" + emoji.emojize(":index_pointing_up:"),
+        "If capital consists of two or more words, type it as one word.\n"
+    ]
 
     for i in instructions:
-        print(i) ; sleep(1)
+        print(i)
+        sleep(2)
 
-again = ''
-def ask_user(again):
+
+def ask_user():
     try:
-        ready = input(f"Do you want to continue {again}? (yes/no)  \n")
+        ready = input("DO YOU WANT TO CONTINUE? (yes/no)  \n")
         if ready == 'yes':
             return True
         elif ready == 'no':
-            print("That's a shame! Come back next time", emoji.emojize(":grinning_face_with_big_eyes:"), "\n")
+            print("That's a shame! Come back next time",
+                  emoji.emojize(":grinning_face_with_big_eyes:"), "\n")
             sys.exit()
         elif ready != 'yes' & ready != 'no':
-            raise Exception
-        
-    except Exception as error:
-        print("Hmmm... Check if you typed 'yes' to play or 'no' to exit the game. Please try again.\n")
-        return ask_user(again)
+            raise Exception("Check if you typed 'yes' or 'no'.")
+    except Exception as e:
+        print(f"Invalid data: {e} Please try again.\n")
+        return ask_user()
 
 
 def continent_choice():
     global google_list
-    continents = {'1':'ASIA','2': 'AFRICA', '3': 'EUROPE', '4': 'NORTH/SOUTH AMERICAS', '5': 'AUSTRALIA/OCEANIA'}
-    print("\nGo ahead and pick a number corresponding to the continent of your choice:\n\n")
-    print(*[f'Enter {k} for {v}' for k,v in continents.items()], sep='\n')
+    continents = {
+        '1': 'ASIA',
+        '2': 'AFRICA',
+        '3': 'EUROPE',
+        '4': 'NORTH/SOUTH AMERICAS',
+        '5': 'AUSTRALIA/OCEANIA'
+    }
+    print("\nGO AHEAD!")
+    print("Pick a number corresponding to the continent of your choice: \n\n")
+    print(*[f'Enter {k} for {v}' for k, v in continents.items()], sep='\n')
     chosen_continent = input('\n'"")
-    
     try:
 
         if chosen_continent == list(continents.keys())[0]:
-            google_sheet_data = SHEET.worksheet('asian_countries').get_all_values()
+            google_sheet_data = SHEET.worksheet(
+                'asian_countries').get_all_values()
             google_list = google_sheet_data
             print("\n\n"f"{list(continents.values())[0]} is a great choice!\n")
-        
-        
         elif chosen_continent == list(continents.keys())[1]:
-            google_sheet_data = SHEET.worksheet('african_countries').get_all_values()
+            google_sheet_data = SHEET.worksheet(
+                'african_countries').get_all_values()
             google_list = google_sheet_data
             print("\n\n"f"{list(continents.values())[1]} is a great choice!\n")
-            
         elif chosen_continent == list(continents.keys())[2]:
-            google_sheet_data = SHEET.worksheet('european_countries').get_all_values()
+            google_sheet_data = SHEET.worksheet(
+                'european_countries').get_all_values()
             google_list = google_sheet_data
             print("\n\n"f"{list(continents.values())[2]} is a great choice!\n")
-
         elif chosen_continent == list(continents.keys())[3]:
-            google_sheet_data = SHEET.worksheet('north_south_america_countries').get_all_values()
+            google_sheet_data = SHEET.worksheet(
+                'north_south_america_countries').get_all_values()
             google_list = google_sheet_data
             print("\n\n"f"{list(continents.values())[3]} is a great choice!\n")
-
         elif chosen_continent == list(continents.keys())[4]:
-            google_sheet_data = SHEET.worksheet('australia_oceania_countries').get_all_values()
+            google_sheet_data = SHEET.worksheet(
+                'australia_oceania_countries').get_all_values()
             google_list = google_sheet_data
             print("\n\n"f"{list(continents.values())[4]} is a great choice!\n")
-        
         else:
-            raise Exception (f"only the numbers from the list provided are considered")
-    
-    except Exception as error:
-        print(f"\nThis is invalid input as {error}, please try again.\n")
+            raise Exception(
+                "only the numbers from the list provided are considered")
+    except Exception as e:
+        print(f"\nThis is invalid input as {e}, please try again.\n")
         return continent_choice()
-    
+
+
 def loading_animation(count=15):
     for i in range(count):
         sys.stdout.write('\rI am thinking up a country | ')
@@ -105,8 +119,11 @@ def loading_animation(count=15):
         time.sleep(0.1)
     sys.stdout.write("\rEUREKA! I am ready for you right answer..." + "\n\n")
 
+correct = 0
+incorrect = 0
+
 def play():
-    global google_list, user_name
+    global google_list, user_name, correct, incorrect
     max_guess = 3
     guess_num = 1
     user_attempt = ''
@@ -119,16 +136,24 @@ def play():
     print("What is the capital of " + country.upper() + "?\n" + "Your hint is " + capital_hint.upper() + "\n")
     print(emoji.emojize(":index_pointing_up: ") + "REMEMBER" + emoji.emojize(":index_pointing_up: ") + " If capital name consists of two or more words, you have to type it as one word.\n")
 
-    while guess_num <= max_guess or user_attempt.lower() != capital.lower():
+    while guess_num <= max_guess: #or user_attempt.lower() != capital.lower():
         user_attempt = input("Type in your guess #%s below: " % (guess_num) + "\n")
         guess_num += 1
         if user_attempt.lower() == capital.lower():
             print("C'EST MAGNEFIQUE! You are a force to be reckoned with in geography")
+            correct += 1
+            total = correct + incorrect
+            print(f"Your correct count score:", correct)
+            print(f"Total questions: ", total)
             break
         if guess_num > max_guess:
             print("\nOH, NO! That was your last chance to get it right. The answer was %s." %(capital))
+            incorrect += 1
+            total = correct + incorrect
+            print(f"Your incorrect count score:", incorrect)
+            print(f'Total questions:',total)
             break
-        
+    
     while True:
         another_continent = input("\nDo you want to try out another continent? (yes/no) \n")
         if another_continent == "yes":
@@ -137,16 +162,20 @@ def play():
             play()
         elif another_continent == "no":
             print(f"Okay {user_name.capitalize()}, thanks for playing, have a lovely day.")
+            #print(f'Your score: you got {0} of {1} correct.'.format(correct, (correct + incorrect)))
+            print(f"Your score for correct: ", correct)
+            print(f"Your score for incorrect: ", incorrect)
             sys.exit()
         else:
             print("\nHmm.. That wan an invalid input. You have to select either 'yes' or 'no' \n")
-            print('Please try again')    
+            print('Please try again')  
 
 def main():
     game_intro()
-    ask_user(again)
+    ask_user()
     continent_choice()
     loading_animation()
     play()
+
 
 main()
