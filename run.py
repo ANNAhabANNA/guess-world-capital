@@ -5,6 +5,8 @@ import sys
 import emoji
 from time import sleep
 import time
+from pyfiglet import Figlet
+from termcolor import colored
 
 SCOPE = [
     "https://www.googleapis.com/auth/spreadsheets",
@@ -21,31 +23,36 @@ SHEET = GSPREAD_CLIENT.open('world_capital_cities')
 def game_intro():
 
     global user_name
-    print("\nWELCOME TO CAPITALS OF THE WORLD QUIZZ")
-    user_name = input("\nHI THERE! What's your name? \n")
+    f = Figlet(font = "digital")
+    print(colored(f.renderText("\nWELCOME \nTO THE WORLD CAPITALS QUIZ"), "green"))
+    user_name = input("\nHI THERE! \n\nWhat's your name? \n")
     while user_name == '':
         print("\nOops! That's an empty input \n")
         user_name = input("Try again! Type your name here: \n")
-    print("\nNice meeting you," + " " + user_name.capitalize())
-    print(emoji.emojize(":grinning_face_with_smiling_eyes:") + "\n")
+    print("\nNice meeting you," + " " + user_name.upper() + " " + emoji.emojize(":grinning_face:") + "\n")
+    print("Let's check how well you know the world capital cities.\n")
 
     instructions = [
-        "Let's check how well you know the world's capital cities.\n",
-        "You have to guess the world's capital I randomly choose.\n",
+        colored(("****************************************************************"), "green"),
+        "INSTRUCTIONS\n",
+        colored(("****************************************************************"), "green"),
+        "You have to guess the world capital I randomly choose.\n",
         "You'll get a hint with the first and last letters of the city.\n",
-        "You have 3 guesses to get it right.\n\n"
-        "REMEMBER" + emoji.emojize(":index_pointing_up:"),
-        "If capital consists of two or more words, type it as one word.\n"
+        "You have 3 guesses to get it right.\n\n",
+        emoji.emojize(":index_pointing_up:") + "  REMEMBER " + emoji.emojize(":index_pointing_up:") + "\n",
+        colored(("****************************************************************"), "green"),
+        "If capital consists of two or more words, type it as one word.\n",
+        colored(("****************************************************************"), "green")
     ]
 
     for i in instructions:
         print(i)
-        sleep(2)
+        sleep(1)
 
 
 def ask_user():
     try:
-        ready = input("DO YOU WANT TO CONTINUE? (yes/no)  \n")
+        ready = input("\nDO YOU WANT TO CONTINUE?" + " " + colored(("(yes/no)"), "green") + "\n")
         if ready == 'yes':
             return True
         elif ready == 'no':
@@ -53,9 +60,9 @@ def ask_user():
                   emoji.emojize(":grinning_face_with_big_eyes:"), "\n")
             sys.exit()
         elif ready != 'yes' & ready != 'no':
-            raise Exception("Check if you typed 'yes' or 'no'.")
-    except Exception as e:
-        print(f"Invalid data: {e} Please try again.\n")
+            raise Exception
+    except Exception as error:
+        print(colored(("Invalid input! Check if you typed 'yes' or 'no'. Please try again.\n"), "red"))
         return ask_user()
 
 
@@ -68,8 +75,9 @@ def continent_choice():
         '4': 'NORTH/SOUTH AMERICAS',
         '5': 'AUSTRALIA/OCEANIA'
     }
-    print("\nGO AHEAD!")
-    print("Pick a number corresponding to the continent of your choice: \n\n")
+    
+    print(colored(("\nGO AHEAD!"), "green"))
+    print(colored(("Pick the number corresponding to the continent of your choice: \n\n"), "green"))
     print(*[f'Enter {k} for {v}' for k, v in continents.items()], sep='\n')
     chosen_continent = input('\n'"")
     try:
@@ -103,7 +111,7 @@ def continent_choice():
             raise Exception(
                 "only the numbers from the list provided are considered")
     except Exception as e:
-        print(f"\nThis is invalid input as {e}, please try again.\n")
+        print(colored((f"\nThis is invalid input as {e} Please try again.\n"), "red"))
         return continent_choice()
 
 
@@ -117,7 +125,7 @@ def loading_animation(count=15):
         time.sleep(0.1)
         sys.stdout.write('\rI am thinking up a country \\')
         time.sleep(0.1)
-    sys.stdout.write("\rEUREKA! I am ready for you right answer..." + "\n\n")
+    sys.stdout.write(colored(("\rEUREKA! I am all ears and ready for your answer."), "green") + "\n\n")
 
 correct = 0
 incorrect = 0
@@ -132,43 +140,44 @@ def play():
     capital = random_choice[1]
     capital_hint = capital[0]+"."*(len(capital)-2)+capital[-1]
 
-    print("You have %s guesses to get it.\n\n" %(max_guess))
-    print("What is the capital of " + country.upper() + "?\n" + "Your hint is " + capital_hint.upper() + "\n")
-    print(emoji.emojize(":index_pointing_up: ") + "REMEMBER" + emoji.emojize(":index_pointing_up: ") + " If capital name consists of two or more words, you have to type it as one word.\n")
-
-    while guess_num <= max_guess: #or user_attempt.lower() != capital.lower():
+    print(colored(("****************************************************************"), "green"))
+    print(colored(("\nWhat is the capital of " + country.upper() + "?\n" + "\nYour hint is " + capital_hint.upper() + "\n"), "yellow"))
+    print(colored(("****************************************************************"), "green"))
+    while guess_num <= max_guess:
         user_attempt = input("Type in your guess #%s below: " % (guess_num) + "\n")
         guess_num += 1
         if user_attempt.lower() == capital.lower():
-            print("C'EST MAGNEFIQUE! You are a force to be reckoned with in geography")
+            print(colored(("\nC'EST MAGNEFIQUE!"), "green") + " " + "You are a force to be reckoned with in geography.")
             correct += 1
             total = correct + incorrect
-            print(f"Your correct count score:", correct)
-            print(f"Total questions: ", total)
+            print(f"\nYour correct answers score: ", colored((correct), "green"))
+            print(f"\nTotal questions: ", total)
             break
         if guess_num > max_guess:
-            print("\nOH, NO! That was your last chance to get it right. The answer was %s." %(capital))
+            print(colored(("\nOH, NO!"), "red") + " " + "That was your last chance to get it right. The answer was %s." %(capital))
             incorrect += 1
             total = correct + incorrect
-            print(f"Your incorrect count score:", incorrect)
-            print(f'Total questions:',total)
+            print(f"\nYour incorrect answers score: ", colored((incorrect), "red"))
+            print(f"\nTotal questions: ", total)
             break
     
     while True:
-        another_continent = input("\nDo you want to try out another continent? (yes/no) \n")
+        another_continent = input("\nDO YOU WANT TO TRY ANOTHER CONTINENT?" + " " + colored(("(yes/no)"), "green") + "\n")
         if another_continent == "yes":
             continent_choice()
             loading_animation()
             play()
         elif another_continent == "no":
-            print(f"Okay {user_name.capitalize()}, thanks for playing, have a lovely day.")
-            #print(f'Your score: you got {0} of {1} correct.'.format(correct, (correct + incorrect)))
-            print(f"Your score for correct: ", correct)
-            print(f"Your score for incorrect: ", incorrect)
+            print(f"\nOkay {user_name.upper()}, thanks for playing, have a lovely day.\n")
+            print(colored(("****************************************************************"), "green"))
+            print(f"Your correct answers score: ", colored((correct), "green"))
+            print(f"\nYour incorrect answers score: ", colored((incorrect), "red"))
+            print(f"\nTotal questions: ", total)
+            print(colored(("****************************************************************"), "green"))
             sys.exit()
         else:
-            print("\nHmm.. That wan an invalid input. You have to select either 'yes' or 'no' \n")
-            print('Please try again')  
+            print(colored(("\nHmm.. That was an invalid input. You have to select either 'yes' or 'no' \n"), "red"))
+            print(colored(('Please try again.') , "red"))
 
 def main():
     game_intro()
