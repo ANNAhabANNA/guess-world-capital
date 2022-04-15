@@ -5,10 +5,12 @@ import sys
 import emoji
 from time import sleep
 import time
-from pyfiglet import Figlet
-import pyfiglet.fonts
 from termcolor import colored
 
+"""
+The following setup for connecting to Google API with Python
+is taken from Code Institute Love Sandwiches project
+"""
 SCOPE = [
     "https://www.googleapis.com/auth/spreadsheets",
     "https://www.googleapis.com/auth/drive.file",
@@ -29,8 +31,12 @@ def game_intro():
     Initiates the welcome message and game instructions
     """
     global user_name
-    f = Figlet(font="digital")
-    print(colored(f.renderText("\nWELCOME \nTO WORLD CAPITALS QUIZ"), "green"))
+    print(colored(("**********************************************"), "green"))
+    print(colored(("****************************************"), "green"))
+    print(colored(("***********************************"), "green"))
+    print(colored(("*****************************"), "green"))
+    print(colored(("\nWELCOME TO\nWORLD CAPITALS QUIZ\n"), "green"))
+    print(colored(("**********************************************"), "green"))
     user_name = input("\nHI THERE! \n\nWhat's your name? \n")
     while user_name == '':
         print("\nOops! That's an empty input \n")
@@ -95,7 +101,8 @@ def continent_choice():
         '5': 'AUSTRALIA/OCEANIA'
     }
     print(colored(("\nGO AHEAD!"), "green"))
-    print(colored(("Pick the number corresponding to the continent of your choice: \n\n"),
+    print(colored(("Pick the number corresponding" +
+                   "to the continent of your choice: \n\n"),
           "green"))
     print(*[f'Enter {k} for {v}' for k, v in continents.items()], sep='\n')
     chosen_continent = input('\n'"")
@@ -139,6 +146,9 @@ def continent_choice():
 def loading_animation(count=15):
     """
     Creates animation to mimic randomized computer choice
+    This code is borrowed from
+    https://stackoverflow.com/questions/22029562/
+    python-how-to-make-simple-animated-loading-while-process-is-running
     """
     for i in range(count):
         sys.stdout.write('\rI am thinking up a country | ')
@@ -205,8 +215,9 @@ def play():
             play()
         elif another_continent == "no":
             print(colored((f"\nOK {user_name.upper()}," +
-                  "thanks for playing and  have a lovely day.\n" +
-                   emoji.emojize(":grinning_face:")), "blue"))
+                           "thanks for playing and  have a lovely day.\n" +
+                            emoji.emojize(":grinning_face:")),
+                  "blue"))
             print(colored(("**************************************"), "green"))
             print(f"Your correct answers score: ", colored((correct), "green"))
             print(f"\nYour incorrect answers score: ",
