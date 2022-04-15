@@ -5,6 +5,8 @@ import sys
 import emoji
 from time import sleep
 import time
+from pyfiglet import Figlet
+import pyfiglet.fonts
 from termcolor import colored
 
 """
@@ -35,7 +37,8 @@ def game_intro():
     print(colored(("****************************************"), "green"))
     print(colored(("***********************************"), "green"))
     print(colored(("*****************************"), "green"))
-    print(colored(("\nWELCOME TO\nWORLD CAPITALS QUIZ\n"), "green"))
+    f = Figlet(font="digital")
+    print(colored(f.renderText("WELCOME \nTO WORLD CAPITALS QUIZ"), "green"))
     print(colored(("**********************************************"), "green"))
     user_name = input("\nHI THERE! \n\nWhat's your name? \n")
     while user_name == '':
