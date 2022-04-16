@@ -95,8 +95,8 @@ def ask_user():
 
 def continent_choice():
     """
-    Fetches relevant continent google sheet data after user chooses a continent
-    and validates user input
+    Fetches relevant continent google sheet data after
+    the user chooses a continent and validates the user input
     """
     global google_list
     continents = {
@@ -172,9 +172,10 @@ def loading_animation(count=20):
 
 def play():
     """
-    Starts the game by generating question; provides a hint; provides three quesses;
-    validates user input; shows the score; provides the optiion to continue
-    or exit the game; displays final score
+    Starts the game by generating a question with a clue and 
+    by offering the user three quesses to use. 
+    Validates the user input and updates the score.
+    Provides the option to continue or exit the game.
     """
     global google_list, user_name, correct, incorrect
     max_guess = 3
