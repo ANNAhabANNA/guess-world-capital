@@ -30,7 +30,7 @@ incorrect = 0
 
 def game_intro():
     """
-    Initiates the welcome message and game instructions
+    Initiates welcome message and game instructions
     """
     global user_name
     print(colored(("**********************************************"), "green"))
@@ -39,10 +39,13 @@ def game_intro():
     print(colored(("*****************************"), "green"))
     f = Figlet(font="digital")
     print(colored(f.renderText("WELCOME \nTO WORLD CAPITALS QUIZ"), "green"))
+    print(colored(("*****************************"), "green"))
+    print(colored(("***********************************"), "green"))
+    print(colored(("****************************************"), "green"))
     print(colored(("**********************************************"), "green"))
     user_name = input("\nHI THERE! \n\nWhat's your name? \n")
     while user_name == '':
-        print("\nOops! That's an empty input \n")
+        print(colored(("\nOops! That's an empty input \n"), "red"))
         user_name = input("Try again! Type your name here: \n")
     print("\nNice meeting you, " +
           user_name.upper() + " " +
@@ -70,8 +73,8 @@ def game_intro():
 
 def ask_user():
     """
-    Confirms that user wants to continue with the game
-    and validates the user input
+    Confirms if user wants to continue game
+    and validates user input
     """
     try:
         ready = input("\nDO YOU WANT TO CONTINUE?" + " " +
@@ -79,7 +82,7 @@ def ask_user():
         if ready == 'yes':
                 return True
         elif ready == 'no':
-                print("That's a shame! Come back next time",
+                print("THAT'S A SHAME! Come back next time",
                       emoji.emojize(":grinning_face_with_big_eyes:"), "\n")
                 sys.exit()
         elif ready != 'yes' & ready != 'no':
@@ -93,7 +96,7 @@ def ask_user():
 def continent_choice():
     """
     Fetches relevant continent google sheet data after user chooses a continent
-     and validates user input data
+    and validates user input
     """
     global google_list
     continents = {
@@ -103,8 +106,8 @@ def continent_choice():
         '4': 'NORTH/SOUTH AMERICAS',
         '5': 'AUSTRALIA/OCEANIA'
     }
-    print(colored(("\nGO AHEAD!"), "green"))
-    print(colored(("Pick the number corresponding" +
+    print(colored(("\nGO AHEAD! "), "green"))
+    print(colored(("Pick the number corresponding " +
                    "to the continent of your choice: \n\n"),
           "green"))
     print(*[f'Enter {k} for {v}' for k, v in continents.items()], sep='\n')
@@ -146,7 +149,7 @@ def continent_choice():
         return continent_choice()
 
 
-def loading_animation(count=15):
+def loading_animation(count=20):
     """
     Creates animation to mimic randomized computer choice
     This code is borrowed from
@@ -162,15 +165,15 @@ def loading_animation(count=15):
         time.sleep(0.1)
         sys.stdout.write('\rI am thinking up a country \\')
         time.sleep(0.1)
-    sys.stdout.write(colored(("\rEUREKA! I am all ears and" +
+    sys.stdout.write(colored(("\rEUREKA! I am all ears and " +
                               "ready for your answer."),
                      "green") + "\n\n")
 
 
 def play():
     """
-    Starts the game by asking the question, providing a hint and three quesses;
-    validates the user input, shows the score, provides the optiion to continue
+    Starts the game by generating question; provides a hint; provides three quesses;
+    validates user input; shows the score; provides the optiion to continue
     or exit the game; displays final score
     """
     global google_list, user_name, correct, incorrect
@@ -202,7 +205,7 @@ def play():
         if guess_num > max_guess:
             print(colored(("\nOH, NO!"), "red") +
                   " " + "That was your last chance to get it right." +
-                  "The answer was % s." % (capital))
+                  " The answer was % s." % (capital))
             incorrect += 1
             total = correct + incorrect
             print(f"\nYour incorrect answers score: ",
@@ -229,7 +232,7 @@ def play():
             print(colored(("**************************************"), "green"))
             sys.exit()
         else:
-            print(colored(("\nHmm.. That was an invalid input." +
+            print(colored(("\nHmm.. That was an invalid input. " +
                            "You have to select either 'yes' or 'no' \n"),
                   "red"))
             print(colored(('Please try again.'), "red"))
