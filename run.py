@@ -78,7 +78,7 @@ def ask_user():
     """
     try:
         ready = input("\nDO YOU WANT TO CONTINUE?" + " " +
-                      colored(("(yes/no)"), "green") + "\n").lower()
+                      colored(("(yes/no)"), "green") + "\n")
         if ready == 'yes':
                 return True
         elif ready == 'no':
@@ -215,7 +215,7 @@ def play():
             break
     while True:
         another_continent = input("\nDO YOU WANT TO TRY ANOTHER CONTINENT?" +
-                                  " " + colored(("(yes/no)"), "green") + "\n").lower()
+                                  " " + colored(("(yes/no)"), "green") + "\n")
         if another_continent == "yes":
             continent_choice()
             loading_animation()
